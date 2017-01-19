@@ -1,4 +1,5 @@
 # Calculator
+Live: https://danlee9.github.io/pocket-calculator
 
 > - Pocket calculator created using javascript, html, and css.
     - Uses html and css to style simple calculator
