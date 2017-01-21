@@ -1,78 +1,98 @@
 $(document).ready(applyClickHandlers);
 
 var inputs = [];
-var currentInput = '';
+var lastInput = '';
 var base;
 var lastOperation;
-var type;
+var lastInputType;
 var successiveOps = false;
 
 function inputNumber(val) {
-	if (type === 'equal') {
+	if (lastInputType === 'equal') {
 		reset();
-	} else if (type === 'operator') {
-		inputs.push(currentInput);
-		currentInput = '';
+	} else if (lastInputType === 'operator') {
+		inputs.push(lastInput);
+		lastInput = '';
 	}
-	type = 'number';
-	if (val !== '.' || currentInput.indexOf('.') === -1) {
-		currentInput += val;
+	lastInputType = 'number';
+	if (val !== '.' || lastInput.indexOf('.') === -1) {
+		lastInput += val;
 	}
-	base = currentInput;
-	$('.display').val(currentInput);
+	base = lastInput;
+	$('.display').val(lastInput);
 }
 
 function reset() {
 	inputs = [];
-	currentInput = '';
+	lastInput = '';
 	successiveOps = false;
 	base = null;
 	lastOperation = null;
-	type = undefined;
+	lastInputType = undefined;
 }
 
 function inputOperator(operator) {
-	if (type === undefined) {
+	if (lastInputType === undefined) {
+		$('.display').val(0);
 		return;
 	}
-	if (type !== 'operator') {
-		inputs.push(currentInput);
+	if (lastInput === '.') {
+		$('.display').val('Error');
+		$('.operator').removeClass('highlighted');
+		reset();
+		return;
+	}
+	if (lastInputType !== 'operator') {
+		inputs.push(lastInput);
 		if (successiveOps) {
 			calcAndDisplay();
 			var result = $('.display').val();
 			inputs = [result];
-			if (type === 'equal') {
-				base = result;
-			}
+			// if (lastInputType === 'equal') {
+			// 	base = result;
+			// }
+			base = result;
 		}
 	}
-	type = 'operator';
-	currentInput = lastOperation = operator;
+	lastInputType = 'operator';
+	lastInput = lastOperation = operator;
 	successiveOps = true;
 }
 
 function calcAndDisplay() {
+	inputs[0] *= 10;
+	inputs[2] *= 10;
 	var statement = inputs.join('');
 	var result = eval(statement);
+	result = result/10;
 	if (result == Infinity) result = "Error";
 	$('.display').val(result);
+	reset();
 }
 
 function inputEqual() {
-	if (type === undefined) {
+	if (lastInputType === undefined) {
+		$('.display').val(0);
 		return;
 	}
-	inputs.push(currentInput);
-	if (type === 'operator') {
-		inputs.push(base);
-	} else if (type === 'equal') {
-		inputs.push(lastOperation, base);
+	if (!successiveOps) {
+		return;
 	}
-	type = 'equal';
-	calcAndDisplay();
-	inputs = [];
-	currentInput = $('.display').val();
-	successiveOps = true;
+	inputs.push(lastInput);
+	if (lastInputType === 'operator') {
+		inputs.push(base);
+	} else if (lastInputType === 'equal') {
+		if (lastOperation) {
+			inputs.push(lastOperation, base);
+		}
+	}
+	if (inputs.length === 3) {
+		lastInputType = 'equal';
+		calcAndDisplay();
+		inputs = [];
+		lastInput = $('.display').val();
+		successiveOps = true;
+	}	
 }
 
 function applyClickHandlers() {
@@ -94,10 +114,36 @@ function applyClickHandlers() {
 
 	$('.clear-all').on('click', function() {
 		$('.operator').removeClass('highlighted');
-		$('.display').val('');
+		$('.display').val(0);
 		reset();
 	});
 
+	$('.number, .equal').on('mousedown', function() {
+		$(this).addClass('pressedA');
+	});
+
+	$('.number, .equal').on('mouseup', function() {
+		$(this).removeClass('pressedA');
+	});
+
+	$('.half-button').on('mousedown', function() {
+		$(this).addClass('pressedB');
+	});
+
+	$('.half-button').on('mouseup', function() {
+		$(this).removeClass('pressedB');
+	});	
+
+
+	// for debugging
+	$('button').on('click', function() {
+		$('.inputs').text(inputs);
+		$('.lastInput').text(lastInput);
+		$('.base').text(base);
+		$('.lastOperation').text(lastOperation);
+		$('.lastInputType').text(lastInputType);
+		$('.successiveOps').text(successiveOps);
+	});
 	//Remember to add functionality for clear entry 
 }
 

@@ -12,6 +12,10 @@ body {
 	background: url(../img/wood-desk.jpg) repeat;
 }
 
+button {
+	outline: none;
+}
+
 button:hover {
 	cursor: pointer;
 }
@@ -68,3 +72,14 @@ button:hover {
 	background: salmon;
 }
 
+.pressedA {
+	background: dodgerblue;
+}
+
+.pressedB {
+	background: cornflowerblue;
+}
+
+.stats {
+	color: white;
+}
