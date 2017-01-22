@@ -10,4 +10,5 @@ Live: https://danlee9.github.io/pocket-calculator
 ### Planned Features and Additions in the future
 - Clear Entry function distinct from Clear All
 - Mathematical order of operations:
+
 	![Alt text](./planned-addition.png?raw=true "Planned Addition")
