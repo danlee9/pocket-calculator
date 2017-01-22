@@ -1,17 +1,25 @@
 $(document).ready(applyClickHandlers);
 
-var inputs = [];
+// array to hold numbers and operators to be used for calculation
+var calculationArr = [];
+// represents the last number or operator input to be pressed
 var lastInput = '';
+// holds a base number to be used for calculator operation repeats or rollovers
 var base;
+// holds last operation pressed or used
 var lastOperation;
+// indicates the type of the last pressed input
 var lastInputType;
+// successiveOps flag to indicate whether an operation button press should also result in a calculation
 var successiveOps = false;
+// indicates whether a calculation has been made after reset or start of calculator
+var firstCalculationMade = false;
 
 function inputNumber(val) {
 	if (lastInputType === 'equal') {
 		reset();
 	} else if (lastInputType === 'operator') {
-		inputs.push(lastInput);
+		calculationArr.push(lastInput);
 		lastInput = '';
 	}
 	lastInputType = 'number';
@@ -20,15 +28,6 @@ function inputNumber(val) {
 	}
 	base = lastInput;
 	$('.display').val(lastInput);
-}
-
-function reset() {
-	inputs = [];
-	lastInput = '';
-	successiveOps = false;
-	base = null;
-	lastOperation = null;
-	lastInputType = undefined;
 }
 
 function inputOperator(operator) {
@@ -43,15 +42,14 @@ function inputOperator(operator) {
 		return;
 	}
 	if (lastInputType !== 'operator') {
-		inputs.push(lastInput);
+		calculationArr.push(lastInput);
 		if (successiveOps) {
 			calcAndDisplay();
 			var result = $('.display').val();
-			inputs = [result];
-			// if (lastInputType === 'equal') {
-			// 	base = result;
-			// }
+			calculationArr = [result];
 			base = result;
+		} else {
+			base = lastInput;
 		}
 	}
 	lastInputType = 'operator';
@@ -60,14 +58,26 @@ function inputOperator(operator) {
 }
 
 function calcAndDisplay() {
-	inputs[0] *= 10;
-	inputs[2] *= 10;
-	var statement = inputs.join('');
+	calculationArr[0] *= 10;
+	calculationArr[2] *= 10;
+	var operation = calculationArr[1];
+	var statement = calculationArr.join('');
 	var result = eval(statement);
-	result = result/10;
+	if (operation === '+' || operation === '-') result = result/10;
+	else if (operation === '*') result = result/100;
 	if (result == Infinity) result = "Error";
 	$('.display').val(result);
 	reset();
+}
+
+function reset() {
+	calculationArr = [];
+	lastInput = '';
+	successiveOps = false;
+	base = null;
+	lastOperation = null;
+	lastInputType = undefined;
+	firstCalculationMade = false;
 }
 
 function inputEqual() {
@@ -75,23 +85,26 @@ function inputEqual() {
 		$('.display').val(0);
 		return;
 	}
-	if (!successiveOps) {
+	if (calculationArr.length < 1 && !firstCalculationMade) {
 		return;
 	}
-	inputs.push(lastInput);
+	calculationArr.push(lastInput);
 	if (lastInputType === 'operator') {
-		inputs.push(base);
+		calculationArr.push(base);
 	} else if (lastInputType === 'equal') {
 		if (lastOperation) {
-			inputs.push(lastOperation, base);
+			calculationArr.push(lastOperation, base);
 		}
 	}
-	if (inputs.length === 3) {
-		lastInputType = 'equal';
+	if (calculationArr.length === 3) {
+		var prevBase = base;
+		var lastOpSaved = lastOperation;
 		calcAndDisplay();
-		inputs = [];
+		lastInputType = 'equal';
+		base = prevBase;
+		lastOperation = lastOpSaved;
 		lastInput = $('.display').val();
-		successiveOps = true;
+		firstCalculationMade = true;
 	}	
 }
 
@@ -137,7 +150,7 @@ function applyClickHandlers() {
 
 	// for debugging
 	$('button').on('click', function() {
-		$('.inputs').text(inputs);
+		$('.calculationArr').text(calculationArr);
 		$('.lastInput').text(lastInput);
 		$('.base').text(base);
 		$('.lastOperation').text(lastOperation);
