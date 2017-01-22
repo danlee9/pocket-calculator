@@ -168,14 +168,14 @@ function applyClickHandlers() {
 
 
 	// for debugging
-	$('button').on('click', function() {
-		$('.calculationArr').text(calculationArr);
-		$('.lastInput').text(lastInput);
-		$('.base').text(base);
-		$('.lastOperation').text(lastOperation);
-		$('.lastInputType').text(lastInputType);
-		$('.successiveOps').text(successiveOps);
-	});
+	// $('button').on('click', function() {
+	// 	$('.calculationArr').text(calculationArr);
+	// 	$('.lastInput').text(lastInput);
+	// 	$('.base').text(base);
+	// 	$('.lastOperation').text(lastOperation);
+	// 	$('.lastInputType').text(lastInputType);
+	// 	$('.successiveOps').text(successiveOps);
+	// });
 	//Remember to add functionality for clear entry 
 }
 
