@@ -23,6 +23,7 @@ function inputNumber(val) {
 		lastInput = '';
 	}
 	lastInputType = 'number';
+	// prevents adding multiple decimal points
 	if (val !== '.' || lastInput.indexOf('.') === -1) {
 		lastInput += val;
 	}
@@ -31,8 +32,9 @@ function inputNumber(val) {
 }
 
 function inputOperator(operator) {
-	if (lastInputType === undefined) {
+	if (!lastInputType) {
 		$('.display').val(0);
+		$('.operator').removeClass('highlighted');
 		return;
 	}
 	if (lastInput === '.') {
@@ -76,12 +78,12 @@ function reset() {
 	successiveOps = false;
 	base = null;
 	lastOperation = null;
-	lastInputType = undefined;
+	lastInputType = null;
 	firstCalculationMade = false;
 }
 
 function inputEqual() {
-	if (lastInputType === undefined) {
+	if (!lastInputType) {
 		$('.display').val(0);
 		return;
 	}
