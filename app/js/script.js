@@ -147,6 +147,14 @@ function applyClickHandlers() {
 
 	$('.half-button').on('mouseup', function() {
 		$(this).removeClass('pressedB');
+	});
+
+	$('.operator').on('mousedown', function() {
+		$(this).addClass('pressedC');
+	});
+
+	$('.operator').on('mouseup', function() {
+		$(this).removeClass('pressedC');
 	});	
 
 

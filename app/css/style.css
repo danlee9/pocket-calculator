@@ -36,7 +36,8 @@ button:hover {
 	border: none;
 	text-align: right;
 	color: white;
-	font-size: 1.3em;
+	font-size: 1.6em;
+	font-family: monospace;
 }
 
 .buttons {
@@ -78,6 +79,10 @@ button:hover {
 
 .pressedB {
 	background: cornflowerblue;
+}
+
+.pressedC {
+	background: darksalmon;
 }
 
 .stats {
