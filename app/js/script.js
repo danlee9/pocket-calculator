@@ -68,6 +68,15 @@ function calcAndDisplay() {
 	if (operation === '+' || operation === '-') result = result/10;
 	else if (operation === '*') result = result/100;
 	if (result == Infinity) result = "Error";
+	// if (result.length > 16) result = +result.toExponential();
+	var exponent = 11;
+	result = '' + result;
+	while (result.length > 16) {
+		console.log(result);
+		result = (+result).toExponential(exponent) + '';
+		exponent--;
+	}
+
 	$('.display').val(result);
 	reset();
 }
